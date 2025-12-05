@@ -24,12 +24,15 @@ const ruleService = require("./src/modules/rule-service/rule-service.routes")
 const priceing = require("./src/modules/priceing/priceing.routes")
 // bulk-job
 const bulkJob = require('./src/modules/bulk-job/bulk-job.routes')
+// health
+const health = require('./src/modules/health/health.routes')
 
 app.use("/api/auth", authRoutes);
 app.use("/api/users", userRoutes);
 app.use("/api/rule-services", ruleService);
 app.use("/api/quotes", priceing);
 app.use("/api/jobs", bulkJob);
+app.use("/api/health", health);
 
 // use Swagger
 swaggerSetup(app);
