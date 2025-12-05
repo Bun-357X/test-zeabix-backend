@@ -5,6 +5,7 @@ async function caculatePrice(req, res) {
   let output_price = 0;
   let message_result = "Not found rule"
   let rule_use = []
+  let over_payload_limit = false
   /*
   {
     "payload": 1000,
@@ -30,15 +31,23 @@ async function caculatePrice(req, res) {
           // can use this rule
           // loop config_data
           let json_config_data = JSON.parse(obj_rule.config_data)
+          // sort desc
+          json_config_data.tiers.sort((a, b) => (a.lt < b.lt ? 1 : -1));
           for (const obj_tier of json_config_data.tiers) {
-            console.log("obj_tier: ",obj_tier);
-            if (json_input.payload >= obj_tier.gte && json_input.payload < obj_tier.lt) {
-              // found range
-              output_price = obj_tier.price
-              console.log("WeightTier output_price: ", output_price);
-              rule_use.push(obj_rule.type)
-              break
+            //console.log("obj_tier: ",obj_tier);
+            if (json_input.payload > obj_tier.lt) {
+              console.log("payload over: ",json_input.payload);
+              over_payload_limit = true
+            } else {
+              if (json_input.payload >= obj_tier.gte && json_input.payload <= obj_tier.lt) {
+                // found range
+                output_price = obj_tier.price
+                console.log("WeightTier output_price: ", output_price);
+                rule_use.push(obj_rule.type)
+                break
+              }
             }
+        
           }
         }
       }
@@ -99,6 +108,9 @@ async function caculatePrice(req, res) {
   } 
   //const ruleServices = await ruleService.getAllRuleServices();
   //res.json(ruleServices);
+  if (over_payload_limit) {
+    message_result = "Fail caculate price from payload: payload over weigth"
+  }
   let json_output = {
     "message": message_result,
     "data": {
