@@ -38,8 +38,47 @@ const authenticate = require("../../middleware/auth.middleware"); // Import midd
  *                     rule_use:
  *                       type: object
  *       404:
- *         description: ไม่พบ rule-services
+ *         description: คำนวน price ไม่สำเร็จ
  */
 router.post("/price", authenticate, priceingController.caculatePrice);
+
+/**
+ * @swagger
+ * /api/quotes/bulk:
+ *   post:
+ *     summary: คำนวน price แบบ bulk
+ *     tags: [Price]
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: array
+ *             items:
+ *               type: object
+ *               properties:
+ *                 payload:
+ *                   type: integer
+ *                 post_code:
+ *                   type: integer
+ *     responses:
+ *       200:
+ *         description: รอคำนวน bulk price 
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 message:
+ *                   type: string
+ *                 data:
+ *                   type: object
+ *                   properties:
+ *                     job_id:
+ *                       type: integer
+ *       404:
+ *         description: รอคำนวน bulk price  ไม่สำเร็จ
+ */
+router.post("/bulk", authenticate, priceingController.caculatePriceBulk);
 
 module.exports = router;
