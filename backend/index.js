@@ -20,10 +20,13 @@ const userRoutes = require("./src/modules/user/user.routes");
 const authRoutes = require("./src/modules/auth/auth.routes");
 // rule-services
 const ruleService = require("./src/modules/rule-service/rule-service.routes")
+// priceing
+const priceing = require("./src/modules/priceing/priceing.routes")
 
 app.use("/api/auth", authRoutes);
 app.use("/api/users", userRoutes);
 app.use("/api/rule-services", ruleService);
+app.use("/api/quotes", priceing);
 
 // use Swagger
 swaggerSetup(app);

@@ -1,7 +1,7 @@
 const RuleService = require("./rule-service.model");
 
-async function getAllRuleServices() {
-  return await RuleService.findAll({where: { delete_flag: false }});
+async function getAllRuleServices(raw = false) {
+  return await RuleService.findAll({where: { delete_flag: false }, raw: raw});
 }
 
 async function createRuleService(data) {
