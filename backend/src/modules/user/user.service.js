@@ -10,14 +10,18 @@ async function createUser(data) {
 
 async function updateUser(id, data) {
 
-  let [updatedCount, updatedUsers] = await User.update(data, {
-    where: { id },
-    returning: true,
+  let updatedUsers = null;
+  let updatedCount = await User.update(data, {
+    where: { id }
   });
   if (updatedCount === 0) {
     return null;
+  } else {
+    
+    updatedUsers = await User.findByPk(id);
+
   }
-  return updatedUsers[0]
+  return updatedUsers
 }
 
 module.exports = { getAllUsers, createUser, updateUser };

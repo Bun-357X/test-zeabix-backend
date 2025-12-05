@@ -7,15 +7,32 @@ const RuleService = sequelize.define("rule_service", {
     allowNull: false,
     unique: true,
   },
-  email: {
-    type: DataTypes.STRING,
+  priority: {
+    type: DataTypes.INTEGER,
     allowNull: false,
-    unique: true,
+    unique: false,
   },
-  password: {
-    type: DataTypes.STRING,
+  effective_from: {
+    type: DataTypes.DATE,
     allowNull: false,
   },
+  effective_to: {
+    type: DataTypes.DATE,
+    allowNull: false,
+  },
+  is_active: {
+    type: DataTypes.BOOLEAN,
+    allowNull: false,
+  },
+  config_data: {
+    type: DataTypes.JSON,
+    allowNull: false,
+  },
+  delete_flag: {
+    type: DataTypes.BOOLEAN,
+    defaultValue: false
+  },
+  
 });
 
 module.exports = RuleService;

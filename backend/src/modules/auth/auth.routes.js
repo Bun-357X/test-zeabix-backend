@@ -18,8 +18,10 @@ const authController = require("./auth.controller");
  *             properties:
  *               email:
  *                 type: string
+ *                 example: "admin@test.com"
  *               password:
  *                 type: string
+ *                 example: "1234"
  *     responses:
  *       200:
  *         description: token
