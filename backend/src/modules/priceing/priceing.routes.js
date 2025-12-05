@@ -3,6 +3,9 @@ const router = express.Router();
 const priceingController = require("./priceing.controller");
 const authenticate = require("../../middleware/auth.middleware"); // Import middleware
 
+const multer = require("multer");
+const upload = multer({ storage: multer.memoryStorage() });
+
 /**
  * @swagger
  * /api/quotes/price:
@@ -46,21 +49,19 @@ router.post("/price", authenticate, priceingController.caculatePrice);
  * @swagger
  * /api/quotes/bulk:
  *   post:
- *     summary: คำนวน price แบบ bulk
+ *     summary: คำนวน price แบบ bulk จาก csv
  *     tags: [Price]
  *     requestBody:
  *       required: true
  *       content:
- *         application/json:
+ *         multipart/form-data:
  *           schema:
- *             type: array
- *             items:
- *               type: object
- *               properties:
- *                 payload:
- *                   type: integer
- *                 post_code:
- *                   type: integer
+ *             type: object
+ *             properties:
+ *               file:
+ *                 type: string
+ *                 format: binary
+ *                 description: ไฟล์ CSV ที่ต้องการอัปโหลด
  *     responses:
  *       200:
  *         description: รอคำนวน bulk price 
@@ -79,6 +80,7 @@ router.post("/price", authenticate, priceingController.caculatePrice);
  *       404:
  *         description: รอคำนวน bulk price  ไม่สำเร็จ
  */
-router.post("/bulk", authenticate, priceingController.caculatePriceBulk);
+router.post("/bulk",  upload.single("file"), authenticate, priceingController.caculatePriceBulk);
+
 
 module.exports = router;

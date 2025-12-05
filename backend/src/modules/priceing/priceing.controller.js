@@ -1,6 +1,10 @@
 const ruleService = require("../rule-service/rule-service.service");
 const bulkJobService = require("../bulk-job/bulk-job.service")
 
+const csv = require("csv-parser");
+const { Readable } = require("stream");
+
+
 // caculate one json
 async function caculatePrice(req, res) {
   return caculatePriceOneJob(req, res)
@@ -8,17 +12,56 @@ async function caculatePrice(req, res) {
 
 // caculate array json
 async function caculatePriceBulk(req, res) {
-  // create job
-  let obj_job = await bulkJobService.createBulkJob({})
-  console.log("obj_job: ", obj_job);
-  res.json({job_id: obj_job.id})
-  
-  //return caculatePriceOneJob(req, res)
-  caculatePriceOneJob(req=req, res=null, job_id=obj_job.id);
+  if (!req.file) {
+    return res.status(400).json({ message: "CSV file is required" });
+  }
+
+  const buffer = req.file.buffer;
+
+  const results_csv = [];
+  await new Promise((resolve, reject) => {
+    const stream = Readable.from(buffer.toString());
+
+    
+    try {
+
+      stream
+      .pipe(csv())
+      .on("data", (data) => {
+        // trim colum
+          let cleaned = {};
+          for (let key in data) {
+            cleaned[key.trim()] = data[key].trim();
+          }
+          cleaned.payload = parseInt(cleaned.payload)
+          cleaned.post_code = parseInt(cleaned.post_code)
+          results_csv.push(cleaned);
+      })
+      .on("end", resolve)
+      .on("error", reject);
+        
+      
+    } catch (error) {
+      res.status(500).json({ message: "Server Error" });
+    }
+    })
+    // create job
+    let obj_job = await bulkJobService.createBulkJob({})
+    console.log("obj_job: ", obj_job);
+    res.json({job_id: obj_job.id})
+    
+    //return caculatePriceOneJob(req, res)
+    caculatePriceOneJob(req=req, res=null, job_id=obj_job.id, csv_data=results_csv);
+    
 }
 
-async function caculatePriceOneJob(req, res=null, job_id=null) {
+async function caculatePriceOneJob(req, res=null, job_id=null, csv_data=null) {
   let json_inputs = req.body
+  if (csv_data != null) {
+    json_inputs = csv_data
+    console.log("csv_data: ", csv_data);
+    
+  }
   let output_price = 0;
   let message_result = "Not found rule"
   let over_payload_limit = false
