@@ -5,9 +5,9 @@ const options = {
   definition: {
     openapi: "3.0.0",
     info: {
-      title: "Vehicle Count Display System",
+      title: "Mini priceing",
       version: "1.0.0",
-      description: "Simple CRUD API with Express.js, Sequelize, and PostgreSQL",
+      description: "Simple CRUD API with Express.js, Sequelize, and Sqlite",
     },
     servers: [
       {
