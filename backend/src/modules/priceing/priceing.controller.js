@@ -154,13 +154,17 @@ async function caculatePriceOneJob(req, res=null, job_id=null, csv_data=null) {
             }
           } else if (obj_rule.type.startsWith("RemoteAreaSurcharge")) {
             // check now is between
+            console.log('RemoteAreaSurcharge');
+            
             let date_now = new Date();
             if (checkBetweenTwodate(date_now, obj_rule.effective_from, obj_rule.effective_to)) {
               // can use this rule
+              //console.log('-RemoteAreaSurcharge');
               let json_config_data = JSON.parse(obj_rule.config_data)
-
+              //console.log('-RemoteAreaSurcharge json_config_data:', json_config_data);
               if (json_config_data.list_codes.includes(json_input.post_code)) {
                 // found post_code in this rule
+                //console.log('->RemoteAreaSurcharge');
                 if (output_price > 0) {
                   output_price = output_price * json_config_data.price_mulit
                   console.log("RemoteAreaSurcharge output_price: ", output_price);

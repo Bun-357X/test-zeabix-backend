@@ -7,8 +7,5 @@ const sequelize = new Sequelize({
     logging: false,
 });
 
-sequelize.authenticate()
-    .then(() => console.log("SQLite Connected"))
-    .catch(err => console.error("Connection Error:", err));
 
 module.exports = sequelize;
