@@ -1,7 +1,7 @@
 const app = require("./src/app");
 const sequelize = require("./src/config/database");
 
-const PORT = process.env.PORT || 9000;
+const PORT = process.env.PORT;
 
 (async () => {
   try {
@@ -16,4 +16,4 @@ const PORT = process.env.PORT || 9000;
     console.error("Startup Error:", err);
   }
 })();
-app.listen(PORT, () => console.log(`Server running on port ${PORT}`));
+//app.listen(PORT, () => console.log(`Server running on port ${PORT}`));
