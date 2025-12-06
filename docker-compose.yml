@@ -5,6 +5,4 @@ services:
     build: ./backend
     container_name: backend-Zeabix
     ports:
-      - "3000:3000"
-    volumes:
-      - ./backend:/app
+      - "9000:9000"
